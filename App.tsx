@@ -73,25 +73,51 @@ const App = () => {
         <View style={styles.mainHeader}>
           <Text style={styles.mainHeaderText}>Header</Text>
         </View>
+
         <View style={styles.mainContainer}>
+          {!authorValues.isAuthorPresent && (
+            <View>
+              <Text>Hello</Text>
+            </View>
+          )}
           {authorValues.isAuthorPresent && (
             <>
-              <View>
-                <Text>{authorValues.author}</Text>
+              <View style={styles.poemData}>
+                <Text
+                  style={{fontSize: 20, fontWeight: 'bold', color: '#f9eae1'}}>
+                  {authorValues.author}
+                </Text>
+                <Text
+                  style={{fontSize: 15, textAlign: 'center', color: '#f9eae1'}}>
+                  {authorValues.title}
+                </Text>
               </View>
+
               <ScrollView>
-                {authorValues.poem.map((line) => {
-                  return <Text key={uuid()}>{line}</Text>;
-                })}
+                <View style={styles.poem}>
+                  {authorValues.poem.map((line) => {
+                    return (
+                      <Text
+                        style={{
+                          fontSize: 16,
+
+                          textAlign: 'center',
+                        }}
+                        key={uuid()}>
+                        {line}
+                      </Text>
+                    );
+                  })}
+                </View>
               </ScrollView>
             </>
           )}
-          <View style={styles.mainButton}>
-            <Button
-              title="Fetch Love"
-              onPress={fetchAuthor}
-              color="white"></Button>
-          </View>
+        </View>
+        <View style={styles.mainButton}>
+          <Button
+            title="Fetch Love"
+            onPress={fetchAuthor}
+            color="white"></Button>
         </View>
       </SafeAreaView>
     </>
@@ -108,7 +134,7 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: '#7D4F50',
     width: Dimensions.get('window').width,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   mainHeaderText: {
@@ -123,9 +149,25 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    top: 0,
+  },
+  poemData: {
+    borderTopEndRadius: 20,
+    padding: 10,
+    textAlign: 'center',
+    width: Dimensions.get('window').width * 0.85,
+    backgroundColor: '#7D4F50',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  poem: {
+    display: 'flex',
+    borderBottomEndRadius: 20,
+    padding: 20,
+    backgroundColor: '#D1BE9C',
+    width: Dimensions.get('window').width * 0.85,
+    justifyContent: 'center',
   },
   mainButton: {
     backgroundColor: '#7D4F50',
