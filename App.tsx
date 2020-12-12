@@ -16,12 +16,13 @@ import {
   Button,
   Dimensions,
   ScrollView,
-  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import uuid from 'uuid-random';
+import AnimatedIntroText from './components/AnimatedIntroText';
 
 const App = () => {
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [authors, setAuthors] = useState([]);
   const [authorValues, setAuthor] = useState({
     author: '',
@@ -39,30 +40,28 @@ const App = () => {
       });
     // return () => {
     //   console.log('cleanup');
-    // };
   }, []);
 
   const fetchAuthor = () => {
     setLoading(true);
-    setTimeout(() => {
-      let author = authors[Math.floor(Math.random() * (authors.length - 1))];
-      // setAuthor({
-      //   ...authorValues,
-      //   author: author,
-      // });
-      fetch(`https://poetrydb.org/author/${author}`)
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data[0]);
-          setAuthor({
-            author: author,
-            title: data[0].title,
-            isAuthorPresent: true,
-            poem: data[0].lines,
-          });
+
+    let author = authors[Math.floor(Math.random() * (authors.length - 1))];
+    console.log(author);
+
+    fetch(`https://poetrydb.org/author/${author}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        let title = Math.floor(Math.random() * (data.length - 1));
+        console.log(title);
+        setLoading(false);
+        setAuthor({
+          author: author,
+          title: data[title].title,
+          isAuthorPresent: true,
+          poem: data[title].lines,
         });
-      setLoading(false);
-    }, 2000);
+      });
   };
 
   return (
@@ -75,12 +74,14 @@ const App = () => {
         </View>
 
         <View style={styles.mainContainer}>
-          {!authorValues.isAuthorPresent && (
+          {!isLoading && !authorValues.isAuthorPresent && <AnimatedIntroText />}
+          {isLoading && (
             <View>
-              <Text>Hello</Text>
+              <ActivityIndicator size="large" color="#7D4F50" />
             </View>
           )}
-          {authorValues.isAuthorPresent && (
+
+          {!isLoading && authorValues.isAuthorPresent && (
             <>
               <View style={styles.poemData}>
                 <Text
@@ -92,9 +93,8 @@ const App = () => {
                   {authorValues.title}
                 </Text>
               </View>
-
-              <ScrollView>
-                <View style={styles.poem}>
+              <View style={styles.poem}>
+                <ScrollView>
                   {authorValues.poem.map((line) => {
                     return (
                       <Text
@@ -108,8 +108,8 @@ const App = () => {
                       </Text>
                     );
                   })}
-                </View>
-              </ScrollView>
+                </ScrollView>
+              </View>
             </>
           )}
         </View>
@@ -127,11 +127,11 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9EAE1',
+    backgroundColor: '#D1BE9C',
   },
   mainHeader: {
     flex: 0.03,
-    padding: 12,
+    padding: 15,
     backgroundColor: '#7D4F50',
     width: Dimensions.get('window').width,
     justifyContent: 'center',
@@ -146,14 +146,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   mainContainer: {
-    marginTop: 20,
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   },
   poemData: {
-    borderTopEndRadius: 20,
     padding: 10,
     textAlign: 'center',
     width: Dimensions.get('window').width * 0.85,
@@ -163,11 +161,13 @@ const styles = StyleSheet.create({
   },
   poem: {
     display: 'flex',
-    borderBottomEndRadius: 20,
-    padding: 20,
-    backgroundColor: '#D1BE9C',
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    padding: 10,
+    backgroundColor: '#AA998F',
     width: Dimensions.get('window').width * 0.85,
     justifyContent: 'center',
+    height: Dimensions.get('window').height * 0.6,
   },
   mainButton: {
     backgroundColor: '#7D4F50',
