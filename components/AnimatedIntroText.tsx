@@ -16,7 +16,7 @@ function AnimatedIntroText() {
     <Animated.View
       style={{width: Dimensions.get('window').width * 0.85, opacity: fadeAnim}}>
       <Text style={{textAlign: 'center'}}>
-        Hey baby, I spent some time creating this application for you in hopes
+        I spent some time creating this application for you in hopes
         that it will spark your love for poetry and the written word again. All
         you need to do is click that button down there
         <Text style={{fontSize: 20}}>⤵</Text>
